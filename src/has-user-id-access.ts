@@ -1,6 +1,6 @@
-import { config, Context } from '../deps.deno.ts';
+import { Context } from '../deps.deno.ts';
 
-const { USER_IDS_WITH_ACCESS } = config();
+const USER_IDS_WITH_ACCESS = Deno.env.get('USER_IDS_WITH_ACCESS');
 
 export function hasUserIdAccess(ctx: Context, userIdWithAccess?: (string | number)[] | null) {
 	const userIds = String(USER_IDS_WITH_ACCESS);

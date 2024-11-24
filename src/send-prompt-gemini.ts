@@ -1,7 +1,6 @@
 import { GoogleGenerativeAI } from 'npm:@google/generative-ai';
-import { config } from '../deps.deno.ts';
 
-const { GOOGLE_GEMINI_API } = config();
+const GOOGLE_GEMINI_API = Deno.env.get('GOOGLE_GEMINI_API');
 
 export async function sendPromptGemini(prompt: string) {
 	if (!GOOGLE_GEMINI_API) throw new Error('GOOGLE_GEMINI_API is missing!');
