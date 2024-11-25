@@ -34,14 +34,17 @@ export function hasAccess({
 		chatIdWithAccess && chatIdWithAccess?.length > 0
 			? hasChatIdAccess(ctx, chatIdWithAccess)
 			: false;
+
 	const hasCurrentChannelIdAccess =
 		channelIdWithAccess && channelIdWithAccess?.length > 0
 			? hasChannelIdAccess(ctx, channelIdWithAccess)
 			: false;
+
 	const hasCurrentUserIdAccess =
 		userIdWithAccess && userIdWithAccess?.length > 0
 			? hasUserIdAccess(ctx, userIdWithAccess)
 			: false;
+
 	const hasCurrentUsernameAccess =
 		usernameWithAccess && usernameWithAccess.length > 0
 			? hasUsernameAccess(ctx, usernameWithAccess)
