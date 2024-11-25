@@ -25,6 +25,8 @@ export function hasAccess({
 	ownerHasFullAccess = true,
 }: HasAccess) {
 	const hasOwnerAccess = ownerHasFullAccess ? isOwnerAccess(ctx) : false;
+	if (hasOwnerAccess) return true;
+
 	const hasCurrentChatIdAccess = chatIdWithAccess && chatIdWithAccess?.length > 0
 		? hasChatIdAccess(ctx, chatIdWithAccess)
 		: false;
@@ -39,7 +41,6 @@ export function hasAccess({
 		: false;
 
 	if (
-		hasOwnerAccess ||
 		hasCurrentChatIdAccess ||
 		hasCurrentChannelIdAccess ||
 		hasCurrentUserIdAccess ||
