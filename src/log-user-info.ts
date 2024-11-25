@@ -19,10 +19,10 @@ export function logUserInfo(ctx: Context, { message, access }: LogUserInfoOption
 	const user = `\n  ┌ user: ${userInfo}`;
 	const chat = `\n  └ in: ${chatInfo}`;
 	const msg = message ? ` ${message}` : '';
-	console.log(`> [${new Date().toLocaleString()}]:${msg}${accessMessage}${user}${chat}\n`);
+	const fullMessage = `> [${new Date().toLocaleString()}]:${msg}${accessMessage}${user}${chat}\n`;
 	ctx.api.sendMessage(
 		String(LOG_CHAT_ID),
-		`<blockquote><b>ℹ️INFO: ${APP_NAME}</b></blockquote>\n<code>> [${new Date().toLocaleString()}]:${msg}${user}${chat}\n</code>`,
+		`<blockquote><b>ℹ️INFO: ${APP_NAME}</b></blockquote>\n<code>${fullMessage}</code>`,
 		{ parse_mode: 'HTML' },
 	);
 }
