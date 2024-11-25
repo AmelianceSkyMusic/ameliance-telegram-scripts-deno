@@ -2,7 +2,6 @@ import { hasChannelIdAccess } from './has-channel-id-access.ts';
 import { hasChatIdAccess } from './has-chat-id-access.ts';
 import { hasUserIdAccess } from './has-user-id-access.ts';
 import { hasUsernameAccess } from './has-username-access.ts';
-import { logUserInfo } from './log-user-info.ts';
 
 import { Context } from '../deps.deno.ts';
 import { isOwnerAccess } from './is-owner-access.ts';
@@ -49,6 +48,5 @@ export function hasAccess({
 		return true;
 	}
 
-	logUserInfo(ctx, `has no access`);
 	return false;
 }
