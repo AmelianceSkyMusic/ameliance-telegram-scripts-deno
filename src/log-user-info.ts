@@ -20,6 +20,7 @@ export function logUserInfo(ctx: Context, { message, access }: LogUserInfoOption
 	const chat = `\n  └ in: ${chatInfo}`;
 	const msg = message ? ` ${message}` : '';
 	const fullMessage = `> [${new Date().toLocaleString()}]:${msg}${accessMessage}${user}${chat}\n`;
+	console.log(fullMessage);
 	ctx.api.sendMessage(
 		String(LOG_CHAT_ID),
 		`<blockquote><b>ℹ️INFO: ${APP_NAME}</b></blockquote>\n<code>${fullMessage}</code>`,
