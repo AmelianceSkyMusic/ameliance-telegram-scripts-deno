@@ -12,8 +12,8 @@ type LogUserInfoOptions = {
 };
 export function logUserInfo(ctx: Context, { message, access }: LogUserInfoOptions) {
 	let accessMessage = '';
-	accessMessage = access !== undefined && access === true ? ' no access' : accessMessage;
-	accessMessage = access !== undefined && access === false ? ' with access' : accessMessage;
+	accessMessage = access !== undefined && access === true ? ' ✘ no access' : accessMessage;
+	accessMessage = access !== undefined && access === false ? ' ✔ with access' : accessMessage;
 	const userInfo = getCurrentMessageUserInfo(ctx);
 	const chatInfo = getCurrentMessageChatInfo(ctx);
 	const user = `\n  ┌ user: ${userInfo}`;
@@ -22,9 +22,7 @@ export function logUserInfo(ctx: Context, { message, access }: LogUserInfoOption
 	console.log(`> [${new Date().toLocaleString()}]:${msg}${accessMessage}${user}${chat}\n`);
 	ctx.api.sendMessage(
 		String(LOG_CHAT_ID),
-		`<blockquote><b>ℹ️INFO: ${APP_NAME}</b></blockquote>\n<code>> [${
-			new Date().toLocaleString()
-		}]:${msg}${user}${chat}\n</code>`,
+		`<blockquote><b>ℹ️INFO: ${APP_NAME}</b></blockquote>\n<code>> [${new Date().toLocaleString()}]:${msg}${user}${chat}\n</code>`,
 		{ parse_mode: 'HTML' },
 	);
 }

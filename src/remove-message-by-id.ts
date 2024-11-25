@@ -8,7 +8,7 @@ interface RemoveMessageById {
 	ms?: number;
 }
 
-export async function removeMessageById({
+export function removeMessageById({
 	ctx,
 	messageId,
 	ms = 3600,
