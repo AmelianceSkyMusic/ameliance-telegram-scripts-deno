@@ -5,72 +5,68 @@ import { hasUsernameAccess } from './has-username-access.ts';
 
 import { Context } from '../deps.deno.ts';
 import { isOwnerAccess } from './is-owner-access.ts';
-import { hasAccessInBotChat } from './has-access-in-bot-chat.ts';
+import { isCurrentChatWithBot } from './is-current-chat-with-bot.ts';
 
 type HasAccess = {
 	ctx: Context;
-	all?: boolean;
-	chatIdWithAccess?: string[] | null;
-	channelIdWithAccess?: string[] | null;
-	userIdWithAccess?: string[] | null;
-	usernameWithAccess?: string[] | null;
+	exclusiveAccess?: 'all' | 'private' | 'owner';
 	accessInBotChat?: boolean;
 	ownerHasFullAccess?: boolean;
-	onlyOwnerAccess?: boolean;
+	//* IDs of chats where the bot has access
+	chatIdWithAccess?: string[] | null;
+	//* IDs of channels where the bot has access
+	channelIdWithAccess?: string[] | null;
+	//* IDs of users who have access to the bot
+	userIdWithAccess?: string[] | null;
+	//* Usernames of users who have access to the bot
+	usernameWithAccess?: string[] | null;
 };
 
 export function hasAccess({
 	ctx,
-	all,
+	exclusiveAccess,
+	accessInBotChat = false,
+	ownerHasFullAccess = true,
+
 	chatIdWithAccess,
 	channelIdWithAccess,
 	userIdWithAccess,
 	usernameWithAccess,
-	accessInBotChat = true,
-	ownerHasFullAccess = true,
-	onlyOwnerAccess = false,
 }: HasAccess) {
-	if (onlyOwnerAccess) {
-		const hasOwnerAccess = ownerHasFullAccess ? isOwnerAccess(ctx) : false;
-		return hasOwnerAccess;
+	switch (exclusiveAccess) {
+		case 'all':
+			return true;
+		case 'private':
+			return isCurrentChatWithBot(ctx);
+		case 'owner':
+			return isOwnerAccess(ctx);
 	}
 
-	if (all) return true;
-
-	const hasAccessInChat = accessInBotChat ? hasAccessInBotChat(ctx) : false;
-	if (hasAccessInChat) return true;
+	const hasAllAccessInChatWithBot = accessInBotChat ? isCurrentChatWithBot(ctx) : false;
+	if (hasAllAccessInChatWithBot) return true;
 
 	const hasOwnerAccess = ownerHasFullAccess ? isOwnerAccess(ctx) : false;
 	if (hasOwnerAccess) return true;
 
-	const hasCurrentChatIdAccess =
-		chatIdWithAccess && chatIdWithAccess?.length > 0
-			? hasChatIdAccess(ctx, chatIdWithAccess)
-			: false;
+	const hasCurrentChatIdAccess = chatIdWithAccess && chatIdWithAccess?.length > 0
+		? hasChatIdAccess(ctx, chatIdWithAccess)
+		: false;
+	if (hasCurrentChatIdAccess) return true;
 
-	const hasCurrentChannelIdAccess =
-		channelIdWithAccess && channelIdWithAccess?.length > 0
-			? hasChannelIdAccess(ctx, channelIdWithAccess)
-			: false;
+	const hasCurrentChannelIdAccess = channelIdWithAccess && channelIdWithAccess?.length > 0
+		? hasChannelIdAccess(ctx, channelIdWithAccess)
+		: false;
+	if (hasCurrentChannelIdAccess) return true;
 
-	const hasCurrentUserIdAccess =
-		userIdWithAccess && userIdWithAccess?.length > 0
-			? hasUserIdAccess(ctx, userIdWithAccess)
-			: false;
+	const hasCurrentUserIdAccess = userIdWithAccess && userIdWithAccess?.length > 0
+		? hasUserIdAccess(ctx, userIdWithAccess)
+		: false;
+	if (hasCurrentUserIdAccess) return true;
 
-	const hasCurrentUsernameAccess =
-		usernameWithAccess && usernameWithAccess.length > 0
-			? hasUsernameAccess(ctx, usernameWithAccess)
-			: false;
-
-	if (
-		hasCurrentChatIdAccess ||
-		hasCurrentChannelIdAccess ||
-		hasCurrentUserIdAccess ||
-		hasCurrentUsernameAccess
-	) {
-		return true;
-	}
+	const hasCurrentUsernameAccess = usernameWithAccess && usernameWithAccess.length > 0
+		? hasUsernameAccess(ctx, usernameWithAccess)
+		: false;
+	if (hasCurrentUsernameAccess) return true;
 
 	return false;
 }
