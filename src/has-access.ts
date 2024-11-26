@@ -48,28 +48,24 @@ export function hasAccess({
 	const hasOwnerAccess = ownerHasFullAccess ? isOwnerAccess(ctx) : false;
 	if (hasOwnerAccess) return 'as owner';
 
-	const hasCurrentChatIdAccess =
-		chatIdWithAccess && chatIdWithAccess?.length > 0
-			? hasChatIdAccess(ctx, chatIdWithAccess)
-			: false;
+	const hasCurrentChatIdAccess = chatIdWithAccess && chatIdWithAccess?.length > 0
+		? hasChatIdAccess(ctx, chatIdWithAccess)
+		: false;
 	if (hasCurrentChatIdAccess) return 'in current chatId';
 
-	const hasCurrentChannelIdAccess =
-		channelIdWithAccess && channelIdWithAccess?.length > 0
-			? hasChannelIdAccess(ctx, channelIdWithAccess)
-			: false;
+	const hasCurrentChannelIdAccess = channelIdWithAccess && channelIdWithAccess?.length > 0
+		? hasChannelIdAccess(ctx, channelIdWithAccess)
+		: false;
 	if (hasCurrentChannelIdAccess) return 'in current channelId';
 
-	const hasCurrentUserIdAccess =
-		userIdWithAccess && userIdWithAccess?.length > 0
-			? hasUserIdAccess(ctx, userIdWithAccess)
-			: false;
+	const hasCurrentUserIdAccess = userIdWithAccess && userIdWithAccess?.length > 0
+		? hasUserIdAccess(ctx, userIdWithAccess)
+		: false;
 	if (hasCurrentUserIdAccess) return 'as userId';
 
-	const hasCurrentUsernameAccess =
-		usernameWithAccess && usernameWithAccess.length > 0
-			? hasUsernameAccess(ctx, usernameWithAccess)
-			: false;
+	const hasCurrentUsernameAccess = usernameWithAccess && usernameWithAccess.length > 0
+		? hasUsernameAccess(ctx, usernameWithAccess)
+		: false;
 	if (hasCurrentUsernameAccess) return 'as username';
 
 	return null;
