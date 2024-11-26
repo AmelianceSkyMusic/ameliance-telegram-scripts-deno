@@ -13,7 +13,7 @@ export async function runWithRandomInterval(
 	callback();
 
 	const randomInterval = getRandomNumber(min, max) * oneMinInMs;
-	ctx.reply(
+	await ctx.reply(
 		`Next post will be sent at: ${getCurrentTimeWithOffset(randomInterval)}\nPost delay: ${
 			randomInterval / oneMinInMs
 		} minutes`,
