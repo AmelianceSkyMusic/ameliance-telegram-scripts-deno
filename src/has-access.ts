@@ -35,38 +35,42 @@ export function hasAccess({
 }: HasAccess) {
 	switch (exclusiveAccess) {
 		case 'all':
-			return true;
+			return 'as exclusive all';
 		case 'private':
-			return isCurrentChatWithBot(ctx);
+			return isCurrentChatWithBot(ctx) ? 'as exclusive private' : null;
 		case 'owner':
-			return isOwnerAccess(ctx);
+			return isOwnerAccess(ctx) ? 'as exclusive owner' : null;
 	}
 
 	const hasAllAccessInChatWithBot = accessInBotChat ? isCurrentChatWithBot(ctx) : false;
-	if (hasAllAccessInChatWithBot) return true;
+	if (hasAllAccessInChatWithBot) return 'in bot chat';
 
 	const hasOwnerAccess = ownerHasFullAccess ? isOwnerAccess(ctx) : false;
-	if (hasOwnerAccess) return true;
+	if (hasOwnerAccess) return 'as owner';
 
-	const hasCurrentChatIdAccess = chatIdWithAccess && chatIdWithAccess?.length > 0
-		? hasChatIdAccess(ctx, chatIdWithAccess)
-		: false;
-	if (hasCurrentChatIdAccess) return true;
+	const hasCurrentChatIdAccess =
+		chatIdWithAccess && chatIdWithAccess?.length > 0
+			? hasChatIdAccess(ctx, chatIdWithAccess)
+			: false;
+	if (hasCurrentChatIdAccess) return 'in current chatId';
 
-	const hasCurrentChannelIdAccess = channelIdWithAccess && channelIdWithAccess?.length > 0
-		? hasChannelIdAccess(ctx, channelIdWithAccess)
-		: false;
-	if (hasCurrentChannelIdAccess) return true;
+	const hasCurrentChannelIdAccess =
+		channelIdWithAccess && channelIdWithAccess?.length > 0
+			? hasChannelIdAccess(ctx, channelIdWithAccess)
+			: false;
+	if (hasCurrentChannelIdAccess) return 'in current channelId';
 
-	const hasCurrentUserIdAccess = userIdWithAccess && userIdWithAccess?.length > 0
-		? hasUserIdAccess(ctx, userIdWithAccess)
-		: false;
-	if (hasCurrentUserIdAccess) return true;
+	const hasCurrentUserIdAccess =
+		userIdWithAccess && userIdWithAccess?.length > 0
+			? hasUserIdAccess(ctx, userIdWithAccess)
+			: false;
+	if (hasCurrentUserIdAccess) return 'as userId';
 
-	const hasCurrentUsernameAccess = usernameWithAccess && usernameWithAccess.length > 0
-		? hasUsernameAccess(ctx, usernameWithAccess)
-		: false;
-	if (hasCurrentUsernameAccess) return true;
+	const hasCurrentUsernameAccess =
+		usernameWithAccess && usernameWithAccess.length > 0
+			? hasUsernameAccess(ctx, usernameWithAccess)
+			: false;
+	if (hasCurrentUsernameAccess) return 'as username';
 
-	return false;
+	return null;
 }
