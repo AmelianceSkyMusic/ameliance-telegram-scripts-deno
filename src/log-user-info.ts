@@ -11,7 +11,10 @@ type LogUserInfoOptions = {
 	accessMessage?: string | null;
 };
 export function logUserInfo(ctx: Context, { message, accessMessage }: LogUserInfoOptions) {
-	const fullAccessMessage = accessMessage ? ` ✓ with access ${accessMessage}` : ` ✘ no access`;
+	let fullAccessMessage = '';
+	fullAccessMessage = accessMessage ? ` ✓ with access ${accessMessage}` : fullAccessMessage;
+	fullAccessMessage = accessMessage === undefined ? ` • no access required` : fullAccessMessage;
+	fullAccessMessage = accessMessage === null ? ` ✘ no access` : fullAccessMessage;
 	const userInfo = getCurrentMessageUserInfo(ctx);
 	const chatInfo = getCurrentMessageChatInfo(ctx);
 	const user = `\n  ┌ user: ${userInfo}`;
