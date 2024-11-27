@@ -22,9 +22,9 @@ export function getDateFromUaString(dateString: string) {
 	if (match?.groups) {
 		const { day, month, year } = match.groups;
 		const englishMonth = month ? MONTH_MAP[month.toLowerCase()] : '';
-		console.log('englishMonth: ', englishMonth);
 
 		return new Date(`${englishMonth} ${day}, ${year}`);
 	}
+
 	return null;
 }
