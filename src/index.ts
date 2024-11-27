@@ -5,6 +5,7 @@ export * from './generate-user-full-name-tag.ts';
 export * from './generate-user-tag.ts';
 export * from './get-current-message-chat-info.ts';
 export * from './get-current-message-user-info.ts';
+export * from './get-date-from-ua-string.ts';
 export * from './get-html-data.ts';
 export * from './get-id-from-youtube-url.ts';
 export * from './get-links-from-message.ts';
