@@ -20,6 +20,7 @@ export * from './is-current-chat-with-bot.ts';
 export * from './is-owner-access.ts';
 export * from './log-user-info.ts';
 export * from './prepare-edit-message-text.ts';
+export * from './prepare-gemini-answer-to-telegram-html.ts';
 export * from './remove-message-by-id.ts';
 export * from './reply-html.ts';
 export * from './reply-with-audio.ts';
