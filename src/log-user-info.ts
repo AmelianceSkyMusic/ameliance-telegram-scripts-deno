@@ -20,7 +20,9 @@ export function logUserInfo(ctx: Context, { message, accessMessage }: LogUserInf
 	const user = `\n  ┌ user: ${userInfo}`;
 	const chat = `\n  └ in: ${chatInfo}`;
 	const msg = message ? ` ${message}` : '';
-	const fullMessage = `> [${new Date().toLocaleString()}]:${msg}${fullAccessMessage}${user}${chat}\n`;
+	const fullMessage = `> [${
+		new Date().toLocaleString()
+	}]:${msg}${fullAccessMessage}${user}${chat}\n`;
 	console.log(fullMessage);
 
 	if (!LOG_CHAT_ID) return;

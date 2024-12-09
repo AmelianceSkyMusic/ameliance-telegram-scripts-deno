@@ -16,11 +16,11 @@ export async function runWithRandomInterval(
 
 	const randomInterval = getRandomNumber(min, max) * oneMinInMs;
 	await ctx.reply(
-		`<blockquote><b>ℹ️INFO: ${
-			APP_NAME || ''
-		}</b></blockquote>\n<code>Next post will be sent at: ${getCurrentTimeWithOffset(
-			randomInterval,
-		)}\nPost delay: ${randomInterval / oneMinInMs} minutes</code>`,
+		`<blockquote><b>ℹ️INFO: ${APP_NAME || ''}</b></blockquote>\n<code>Next post will be sent at: ${
+			getCurrentTimeWithOffset(
+				randomInterval,
+			)
+		}\nPost delay: ${randomInterval / oneMinInMs} minutes</code>`,
 		{ parse_mode: 'HTML' },
 	);
 
