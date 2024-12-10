@@ -25,6 +25,6 @@ export async function sendMessagesToChats(
 			userIds.map((id) => ctx.api.sendMessage(id, messageText, restParams)),
 		);
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }

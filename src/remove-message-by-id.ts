@@ -21,7 +21,7 @@ export function removeMessageById({
 				await ctx.api.deleteMessage(chatId, messageId);
 				resolve(true);
 			} catch (error) {
-				handleAppError(ctx, error);
+				await handleAppError(ctx, error);
 				resolve(false);
 			}
 		}, ms);

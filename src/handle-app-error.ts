@@ -1,23 +1,24 @@
-import { ErrorHandler, errorHandler, ReturnErrorHandler } from 'npm:ameliance-scripts';
-
-export type HandleAppError = ErrorHandler;
-
 import { Context } from '../deps.deno.ts';
+import { ErrorHandler, errorHandler, ReturnErrorHandler } from 'npm:ameliance-scripts';
+export type HandleAppError = ErrorHandler;
 
 const APP_NAME = Deno.env.get('APP_NAME');
 const LOG_CHAT_ID = Deno.env.get('LOG_CHAT_ID');
 
-export function handleAppError(ctx: Context, error: unknown, status?: number): ReturnErrorHandler {
+export async function handleAppError(
+	ctx: Context,
+	error: unknown,
+	status?: number,
+): Promise<ReturnErrorHandler> {
 	const returnedError = errorHandler({
 		error,
 		status,
 		title: APP_NAME,
-		errorDepth: 1,
 		wrapperCount: 1,
 	});
 
 	String(LOG_CHAT_ID)
-		? ctx.api.sendMessage(
+		? await ctx.api.sendMessage(
 			String(LOG_CHAT_ID),
 			`<blockquote><b>❗️ERROR: ${APP_NAME} > ${returnedError.code} | ${returnedError.message}</b></blockquote>\n<code>${
 				new Error().stack

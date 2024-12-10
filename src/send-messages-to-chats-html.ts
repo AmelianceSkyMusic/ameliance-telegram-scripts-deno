@@ -16,6 +16,6 @@ export async function sendMessagesToChatsHTML(
 		});
 		return messages;
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }

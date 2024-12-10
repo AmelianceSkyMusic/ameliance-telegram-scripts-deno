@@ -5,7 +5,7 @@ export async function getHTMLData(ctx: Context, url: string) {
 	try {
 		const data = await fetch(url);
 		if (!data.ok) {
-			handleAppError(ctx, `Error fetching data: ${data.status} ${data.statusText}`);
+			await handleAppError(ctx, `Error fetching data: ${data.status} ${data.statusText}`);
 			return null;
 		}
 		const contentType = data.headers.get('Content-Type');
@@ -23,6 +23,6 @@ export async function getHTMLData(ctx: Context, url: string) {
 
 		return html;
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }

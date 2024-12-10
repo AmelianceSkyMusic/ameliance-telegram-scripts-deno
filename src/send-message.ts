@@ -18,6 +18,6 @@ export async function sendMessage(
 		if (message) return message;
 		throw new Error("Can't find message");
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }

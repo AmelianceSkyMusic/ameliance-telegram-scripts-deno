@@ -9,6 +9,6 @@ export async function replyWithAudio(
 	try {
 		await ctx.replyWithAudio(audio, { thumbnail });
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }

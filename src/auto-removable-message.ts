@@ -36,6 +36,6 @@ export async function autoRemovableMessage({
 			await removeMessageById({ ctx, messageId: sendMessage.message_id, ms });
 		}
 	} catch (error) {
-		handleAppError(ctx, error);
+		await handleAppError(ctx, error);
 	}
 }
