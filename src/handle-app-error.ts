@@ -1,5 +1,5 @@
 import { Context } from '../deps.deno.ts';
-import { ErrorHandler, errorHandler, ReturnErrorHandler } from 'npm:ameliance-scripts';
+import { ErrorHandler, errorHandler, joinWith, ReturnErrorHandler } from 'npm:ameliance-scripts';
 export type HandleAppError = ErrorHandler;
 
 const APP_NAME = Deno.env.get('APP_NAME');
@@ -20,13 +20,13 @@ export async function handleAppError(
 	String(LOG_CHAT_ID)
 		? await ctx.api.sendMessage(
 			String(LOG_CHAT_ID),
-			`<blockquote><b>❗️ERROR: ${APP_NAME} > ${returnedError.code} | ${returnedError.message}</b></blockquote>\n<code>${
-				new Error().stack
-					?.split('\n')
-					.map((line) => `   ${line.trim()}`)
-					.splice(1, 1)
-					.join('\n')
-			}</code>\n@amelianceskymusic`,
+			`<blockquote><b>❗️ERROR: ${APP_NAME} > ${
+				joinWith(
+					' | ',
+					returnedError.code || '',
+					returnedError.message,
+				)
+			}</b></blockquote>\n<code>${new Error().stack}</code>\n@amelianceskymusic`,
 			{ parse_mode: 'HTML' },
 			// eslint-disable-next-line no-mixed-spaces-and-tabs
 		)
