@@ -31,5 +31,6 @@ export * from './send-message-html.ts';
 export * from './send-message.ts';
 export * from './send-messages-to-chats-html.ts';
 export * from './send-messages-to-chats.ts';
+export * from './send-prompt-gemini-with-history.ts';
 export * from './send-prompt-gemini.ts';
 export * from './split-test-on-messages.ts';
