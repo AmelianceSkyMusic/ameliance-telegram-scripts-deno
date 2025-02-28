@@ -34,3 +34,4 @@ export * from './send-messages-to-chats.ts';
 export * from './send-prompt-gemini-with-history.ts';
 export * from './send-prompt-gemini.ts';
 export * from './split-test-on-messages.ts';
+export * from './actions/index.ts';
