@@ -7,8 +7,7 @@ import { Context } from '../deps.deno.ts';
 import { isOwnerAccess } from './is-owner-access.ts';
 import { isCurrentChatWithBot } from './is-current-chat-with-bot.ts';
 
-type HasAccess = {
-	ctx: Context;
+export type HasAccess = {
 	exclusiveAccess?: 'all' | 'private' | 'owner';
 	accessInBotChat?: boolean;
 	ownerHasFullAccess?: boolean;
@@ -22,6 +21,10 @@ type HasAccess = {
 	usernameWithAccess?: string[] | null;
 };
 
+type HasAccessProps = {
+	ctx: Context;
+} & HasAccess;
+
 export function hasAccess({
 	ctx,
 	exclusiveAccess,
@@ -32,7 +35,7 @@ export function hasAccess({
 	channelIdWithAccess,
 	userIdWithAccess,
 	usernameWithAccess,
-}: HasAccess) {
+}: HasAccessProps) {
 	switch (exclusiveAccess) {
 		case 'all':
 			return 'as exclusive all';
