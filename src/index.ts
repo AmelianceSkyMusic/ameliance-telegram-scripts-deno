@@ -10,6 +10,7 @@ export * from './get-html-data.ts';
 export * from './get-id-from-youtube-url.ts';
 export * from './get-links-from-message.ts';
 export * from './get-text-form-html.ts';
+export * from './get-user-info.ts';
 export * from './handle-app-error.ts';
 export * from './has-access.ts';
 export * from './has-channel-id-access.ts';
