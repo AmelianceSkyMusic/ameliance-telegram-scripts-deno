@@ -9,7 +9,7 @@ export function prepareGeminiAnswerToTelegramHtml(message: string) {
 				(_, prefix, italicText) => `${prefix}<i>${italicText}</i>`,
 			)
 			// Lists
-			.replace(/^\* (.+)$/gm, (_, listItem) => `• ${listItem}`)
+			.replace(/^\* (.+)$/gm, (_, listItem) => `• ${listItem.trim()}`)
 			// Code blocks
 			.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, language, code) => {
 				const langAttr = language ? ` language="${language}"` : '';
