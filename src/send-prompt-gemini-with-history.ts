@@ -23,13 +23,18 @@ const generationConfig = {
 };
 
 export async function sendPromptGeminiWithHistory(prompt: string, history: Content[] = []) {
+	const tempHistory = [...history];
 	if (!GOOGLE_GEMINI_API) throw new Error('GOOGLE_GEMINI_API is missing!');
 
 	const chatSession = model.startChat({
 		generationConfig,
-		history,
+		history: tempHistory,
 	});
 	const result = await chatSession.sendMessage(prompt);
 	const response = await result.response;
-	return response.text();
+	const answer = response.text();
+	return {
+		answer,
+		history: tempHistory,
+	};
 }
