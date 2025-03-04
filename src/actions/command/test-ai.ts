@@ -7,15 +7,19 @@ import { replyHTML } from '../../reply-html.ts';
 import { sendPromptGemini } from '../../send-prompt-gemini.ts';
 
 type TestAIProps = {
+	command?: string;
 	access: HasAccess;
 	prompt: string;
 };
 
-export function testAi(bot: Bot, { access, prompt }: TestAIProps) {
-	bot.command('testai', async (ctx: Context) => {
+export function testAi(bot: Bot, { command, access, prompt }: TestAIProps) {
+	bot.command(command || 'testai', async (ctx: Context) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
-			logUserInfo(ctx, { message: 'command test-ai', accessMessage: hasAccessToRunCommand });
+			logUserInfo(ctx, {
+				message: `command ${command || 'test-ai'}`,
+				accessMessage: hasAccessToRunCommand,
+			});
 			if (!hasAccessToRunCommand) return;
 
 			const geminiResponse = await sendPromptGemini(prompt);

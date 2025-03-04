@@ -7,14 +7,18 @@ import { removeMessageById } from '../../remove-message-by-id.ts';
 import { sendMessageHTML } from '../../send-message-html.ts';
 
 type DelProps = {
+	command?: string;
 	access: HasAccess;
 };
 
-export function del(bot: Bot, { access }: DelProps) {
-	bot.command('del', async (ctx: Context) => {
+export function del(bot: Bot, { command, access }: DelProps) {
+	bot.command(command || 'del', async (ctx: Context) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
-			logUserInfo(ctx, { message: 'command del', accessMessage: hasAccessToRunCommand });
+			logUserInfo(ctx, {
+				message: `command  ${command || 'del'}`,
+				accessMessage: hasAccessToRunCommand,
+			});
 			if (!hasAccessToRunCommand) return;
 
 			const messageId = ctx.msg.message_id;

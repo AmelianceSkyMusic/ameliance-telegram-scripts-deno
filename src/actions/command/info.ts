@@ -7,14 +7,18 @@ import { getCurrentMessageUserInfo } from '../../get-current-message-user-info.t
 import { HasAccess } from '../../has-access.ts';
 
 type InfoProps = {
+	command?: string;
 	access: HasAccess;
 };
 
-export function info(bot: Bot, { access }: InfoProps) {
-	bot.command('info', async (ctx: Context) => {
+export function info(bot: Bot, { command, access }: InfoProps) {
+	bot.command(command || 'info', async (ctx: Context) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
-			logUserInfo(ctx, { message: 'command info', accessMessage: hasAccessToRunCommand });
+			logUserInfo(ctx, {
+				message: `command  ${command || 'info'}`,
+				accessMessage: hasAccessToRunCommand,
+			});
 			if (!hasAccessToRunCommand) return;
 
 			const messageId = ctx.msg.message_id;

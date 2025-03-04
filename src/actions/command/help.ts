@@ -7,16 +7,19 @@ import { replyHTML } from '../../reply-html.ts';
 import { sendMessageHTML } from '../../send-message-html.ts';
 
 type HelpProps = {
+	command?: string;
 	access: HasAccess;
 	commands: string;
 };
 
-export function help(bot: Bot, { access, commands }: HelpProps) {
-	// export function help(bot: Bot, access: HasAccess, commands: string) {
-	bot.command('help', async (ctx: Context) => {
+export function help(bot: Bot, { command, access, commands }: HelpProps) {
+	bot.command(command || 'help', async (ctx: Context) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
-			logUserInfo(ctx, { message: 'command help', accessMessage: hasAccessToRunCommand });
+			logUserInfo(ctx, {
+				message: `command  ${command || 'help'}`,
+				accessMessage: hasAccessToRunCommand,
+			});
 			if (!hasAccessToRunCommand) return;
 
 			const messageId = ctx.msg.message_id;
