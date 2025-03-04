@@ -6,6 +6,7 @@ export type MapSessionData<T> = {
 type CreateMapSessionReturn<T> = MapSessionData<T> & {
 	clear(): void;
 	reset(): void;
+	get(key: string): T[];
 	hasKey(key: string): boolean;
 	size: number;
 };
@@ -31,9 +32,14 @@ export function createMapSession<T>(
 				Object.keys(_data).forEach((key) => delete _data[key]);
 				Object.assign(_data, initialData);
 			},
+			get(key: string) {
+				if (!this.hasKey(key)) return null;
+				return _data[key];
+			},
 			hasKey(key: string) {
 				return key in _data;
 			},
+
 			get size() {
 				return Object.keys(_data).length;
 			},
