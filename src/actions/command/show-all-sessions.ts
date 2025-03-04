@@ -6,25 +6,21 @@ import { logUserInfo } from '../../log-user-info.ts';
 type ShowSessionProps = {
 	command?: string;
 	access: HasAccess;
-	session: string;
 };
 
-export function showSession(bot: Bot, { command, access, session }: ShowSessionProps) {
-	bot.command(
-		command || `show${session.trim().toLocaleLowerCase()}session`,
-		async (ctx: Context) => {
-			if (!session) return;
+export function showAllSessions(bot: Bot, { command, access }: ShowSessionProps) {
+	bot.command(command || `showallsessions`, async (ctx: Context) => {
+		try {
+			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
+			logUserInfo(ctx, {
+				message: `command ${command || 'show-all-sessions'}`,
+				accessMessage: hasAccessToRunCommand,
+			});
+			if (!hasAccessToRunCommand) return;
 
-			try {
-				const hasAccessToRunCommand = hasAccess({ ctx, ...access });
-				logUserInfo(ctx, {
-					message: `command ${command || `show${session.trim().toLocaleLowerCase()}session`}`,
-					accessMessage: hasAccessToRunCommand,
-				});
-				if (!hasAccessToRunCommand) return;
-
+			const ctxSession = ctx.session;
+			for (const session in ctxSession) {
 				const sessionPath = `ctx.session.${session}`;
-				const chatId = ctx.chat.id;
 				let message = 'Check console';
 				let consoleMessage: string | null = null;
 				let chatMessage = 'Check console';
@@ -32,7 +28,7 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 					message = `Session ${sessionPath} does not exist`;
 				} else {
 					const currentSession = ctx.session[session];
-					console.log('ctx.session: ', ctx.session.exclusiveCommonHistory);
+
 					let sessionData = [];
 					if (currentSession.type === 'list' && currentSession.size === 0) {
 						message = `Session ${sessionPath} is empty array []`;
@@ -45,10 +41,10 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 							: message;
 						console.log(consoleMessage);
 					} else if (currentSession.type === 'map') {
-						if (currentSession.has(chatId)) {
-							sessionData = currentSession.get(chatId).data;
+						for (const key of currentSession.keys) {
+							sessionData = currentSession.get(key).data;
 							consoleMessage = sessionData.length > 0
-								? `Session ${sessionPath} with key ${chatId}!: ${
+								? `Session ${sessionPath} with key ${key}!: ${
 									JSON.stringify(
 										sessionData,
 										null,
@@ -57,8 +53,6 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 								}`
 								: message;
 							console.log(consoleMessage);
-						} else {
-							message = `Session ${sessionPath} is empty object {} with empty key [${chatId}]`;
 						}
 					}
 
@@ -72,9 +66,9 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 				await ctx.reply(chatMessage, {
 					parse_mode: 'HTML',
 				});
-			} catch (error) {
-				handleAppError(ctx, error);
 			}
-		},
-	);
+		} catch (error) {
+			handleAppError(ctx, error);
+		}
+	});
 }
