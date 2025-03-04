@@ -35,11 +35,11 @@ export function aiHears(
 			//* If session is map, get session data by chatId
 			if (currentSession.type === 'map') {
 				const chatId = ctx.chat.id;
-				currentSession = currentSession[chatId];
+				currentSession = currentSession.get(chatId);
 			}
 
 			//* If session is empty, set initPrompt
-			if (session && currentSession.size === 0 && initPrompt) currentSession.data = [initPrompt];
+			if (session && currentSession.size === 0 && initPrompt) currentSession.add(initPrompt);
 
 			const messageId = ctx.msg.message_id;
 			const messageText = ctx.msg.text || ctx.msg.caption;

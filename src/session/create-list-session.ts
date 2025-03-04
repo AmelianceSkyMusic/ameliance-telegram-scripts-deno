@@ -25,8 +25,8 @@ export function createListSession<T>(initialData: T[] = []): CreateListSessionRe
 			_data.length = 0;
 			_data.push(...value);
 		},
-		add(...item: T[]) {
-			_data.push(...item);
+		add(item: T) {
+			_data.push(item);
 		},
 		clear() {
 			_data.length = 0;
