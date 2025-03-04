@@ -19,16 +19,3 @@ export function start(bot: Bot, { message }: StartProps) {
 		}
 	});
 }
-// export function start(bot: Bot, message: string) {
-// 	bot.command('start', async (ctx: Context) => {
-// 		try {
-// 			logUserInfo(ctx, { message: 'command start' });
-
-// 			await ctx.reply(message, {
-// 				parse_mode: 'HTML',
-// 			});
-// 		} catch (error) {
-// 			handleAppError(ctx, error);
-// 		}
-// 	});
-// }
