@@ -55,7 +55,12 @@ export function message(
 			const isBotChat = isCurrentChatWithBot(ctx);
 			const reply = getUserReplyToInfo(ctx);
 
-			if (isBotChat || (reply && reply?.isBot && !isBotChat) || shouldRandomRun || isTrigger) {
+			if (
+				isBotChat ||
+				(reply && reply?.isBot && !reply?.isThisBot && !isBotChat) ||
+				shouldRandomRun ||
+				isTrigger
+			) {
 				const preparedAnswer = await runGemini(ctx, {
 					session,
 					initPrompt,
