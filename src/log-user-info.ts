@@ -9,8 +9,12 @@ const LOG_CHAT_ID = Deno.env.get('LOG_CHAT_ID');
 type LogUserInfoOptions = {
 	message?: string;
 	accessMessage?: string | null;
+	shouldSendMessageInChat?: boolean;
 };
-export function logUserInfo(ctx: Context, { message, accessMessage }: LogUserInfoOptions) {
+export function logUserInfo(
+	ctx: Context,
+	{ message, accessMessage, shouldSendMessageInChat = true }: LogUserInfoOptions,
+) {
 	let fullAccessMessage = '';
 	fullAccessMessage = accessMessage ? ` ✓ with access ${accessMessage}` : fullAccessMessage;
 	fullAccessMessage = accessMessage === undefined ? ` • no access required` : fullAccessMessage;
@@ -25,7 +29,7 @@ export function logUserInfo(ctx: Context, { message, accessMessage }: LogUserInf
 	}]:${msg}${fullAccessMessage}${user}${chat}\n`;
 	console.log(fullMessage);
 
-	if (!LOG_CHAT_ID) return;
+	if (!LOG_CHAT_ID && !shouldSendMessageInChat) return;
 	ctx.api.sendMessage(
 		String(LOG_CHAT_ID),
 		`<blockquote><b>ℹ️INFO: ${APP_NAME || ''}</b></blockquote>\n<code>${fullMessage}</code>`,
