@@ -3,8 +3,8 @@ import { aFetch } from 'npm:ameliance-fetch';
 const APP_NAME = Deno.env.get('APP_NAME');
 const RAPID_API_KEY = Deno.env.get('RAPID_API_KEY');
 
-if (!APP_NAME) console.error('APP_NAME is not defined');
-if (!RAPID_API_KEY) console.error('RAPID_API_KEY is not defined');
+if (!APP_NAME) console.error('APP_NAME is not set');
+if (!RAPID_API_KEY) console.error('RAPID_API_KEY is not set');
 
 const url = 'https://youtube-mp36.p.rapidapi.com/dl';
 const headers = {

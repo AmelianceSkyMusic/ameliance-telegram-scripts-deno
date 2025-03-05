@@ -5,7 +5,7 @@ import { getTextFromHTML } from './get-text-form-html.ts';
 
 const BOT_USERNAME = Deno.env.get('BOT_USERNAME');
 
-if (!BOT_USERNAME) console.log('BOT_USERNAME is not defined');
+if (!BOT_USERNAME) console.log('BOT_USERNAME is not set');
 
 export function getUserReplyToInfo(ctx: Context) {
 	const context = ctx.msg.reply_to_message;

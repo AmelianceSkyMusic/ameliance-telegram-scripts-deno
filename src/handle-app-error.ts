@@ -10,8 +10,8 @@ export async function handleAppError(
 	error: unknown,
 	status?: number,
 ): Promise<ReturnErrorHandler> {
-	if (!APP_NAME) return console.log('APP_NAME is not defined');
-	if (!LOG_CHAT_ID) return console.log('LOG_CHAT_ID is not defined');
+	if (!APP_NAME) return console.log('APP_NAME is not set');
+	if (!LOG_CHAT_ID) return console.log('LOG_CHAT_ID is not set');
 
 	const returnedError = errorHandler({
 		error,
@@ -22,17 +22,15 @@ export async function handleAppError(
 
 	String(LOG_CHAT_ID)
 		? await ctx.api.sendMessage(
-			String(LOG_CHAT_ID),
-			`<blockquote><b>❗️ERROR: ${APP_NAME} > ${
-				joinWith(
+				String(LOG_CHAT_ID),
+				`<blockquote><b>❗️ERROR: ${APP_NAME} > ${joinWith(
 					' | ',
 					returnedError.code || '',
 					returnedError.message,
-				)
-			}</b></blockquote>\n<code>${new Error().stack}</code>\n@amelianceskymusic`,
-			{ parse_mode: 'HTML' },
-			// eslint-disable-next-line no-mixed-spaces-and-tabs
-		)
+				)}</b></blockquote>\n<code>${new Error().stack}</code>\n@amelianceskymusic`,
+				{ parse_mode: 'HTML' },
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  )
 		: null;
 
 	return returnedError;
