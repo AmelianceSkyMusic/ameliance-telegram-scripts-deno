@@ -22,15 +22,17 @@ export async function handleAppError(
 
 	String(LOG_CHAT_ID)
 		? await ctx.api.sendMessage(
-				String(LOG_CHAT_ID),
-				`<blockquote><b>❗️ERROR: ${APP_NAME} > ${joinWith(
+			String(LOG_CHAT_ID),
+			`<blockquote><b>❗️ERROR: ${APP_NAME} > ${
+				joinWith(
 					' | ',
 					returnedError.code || '',
 					returnedError.message,
-				)}</b></blockquote>\n<code>${new Error().stack}</code>\n@amelianceskymusic`,
-				{ parse_mode: 'HTML' },
-				// eslint-disable-next-line no-mixed-spaces-and-tabs
-		  )
+				)
+			}</b></blockquote>\n<code>${new Error().stack}</code>\n@amelianceskymusic`,
+			{ parse_mode: 'HTML' },
+			// eslint-disable-next-line no-mixed-spaces-and-tabs
+		)
 		: null;
 
 	return returnedError;
