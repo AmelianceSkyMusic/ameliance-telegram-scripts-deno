@@ -27,12 +27,13 @@ export function logUserInfo(
 	const fullMessage = `> [${
 		new Date().toLocaleString()
 	}]:${msg}${fullAccessMessage}${user}${chat}\n`;
-	console.log(fullMessage);
+	console.log(`👉${fullMessage}`);
 
-	if (!LOG_CHAT_ID && !shouldSendMessageInChat) return;
-	ctx.api.sendMessage(
-		String(LOG_CHAT_ID),
-		`<blockquote><b>ℹ️INFO: ${APP_NAME || ''}</b></blockquote>\n<code>${fullMessage}</code>`,
-		{ parse_mode: 'HTML' },
-	);
+	if (LOG_CHAT_ID && shouldSendMessageInChat) {
+		ctx.api.sendMessage(
+			String(LOG_CHAT_ID),
+			`<blockquote><b>ℹ️INFO: ${APP_NAME || ''}</b></blockquote>\n<code>${fullMessage}</code>`,
+			{ parse_mode: 'HTML' },
+		);
+	}
 }
