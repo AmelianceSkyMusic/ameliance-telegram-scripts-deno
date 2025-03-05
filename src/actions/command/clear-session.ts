@@ -28,23 +28,23 @@ export function clearSession(bot: Bot, { command, access, session }: ClearSessio
 				let message = 'Check console';
 				const chatId = ctx.chat.id;
 				if (!(session in ctx.session)) {
-					message = `Session ${sessionPath} does not exist`;
+					message = `👉Session ${sessionPath} does not exist`;
 				} else {
 					const currentSession = ctx.session[session];
 					if (currentSession.type === 'list') {
 						if (currentSession.size === 0) {
-							message = `Session ${sessionPath} is already empty array []`;
+							message = `👉Session ${sessionPath} is already empty array []`;
 						} else {
 							currentSession.clear();
-							message = `Session ${sessionPath} was cleared: ${currentSession.data}`;
+							message = `👉Session ${sessionPath} was cleared: ${currentSession.data}`;
 						}
 					} else if (currentSession.type === 'map') {
 						if (currentSession.size === 0) {
-							message = `Session ${sessionPath} is already empty object {}`;
+							message = `👉Session ${sessionPath} is already empty object {}`;
 						} else {
 							currentSession.get(chatId).clear();
 							message =
-								`Session ${sessionPath}  with key [${ctx.msg.userId}] was cleared: ${currentSession}`;
+								`👉Session ${sessionPath}  with key [${ctx.msg.userId}] was cleared: ${currentSession}`;
 						}
 					}
 				}

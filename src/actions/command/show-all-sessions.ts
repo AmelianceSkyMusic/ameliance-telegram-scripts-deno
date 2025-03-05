@@ -31,20 +31,21 @@ export function showAllSessions(bot: Bot, { command, access }: ShowSessionProps)
 
 					let sessionData = [];
 					if (currentSession.type === 'list' && currentSession.size === 0) {
-						message = `Session ${sessionPath} is empty array []`;
+						message = `👉Session ${sessionPath} is empty array []`;
 					} else if (currentSession.type === 'map' && currentSession.size === 0) {
-						message = `Session ${sessionPath} is empty object {}`;
+						message = `👉Session ${sessionPath} is empty object {}`;
 					} else if (currentSession.type === 'list') {
 						sessionData = currentSession.data;
 						consoleMessage = !consoleMessage && sessionData.length > 0
-							? `Session ${sessionPath}!: ${JSON.stringify(sessionData, null, 2)}`
+							? `👉Session ${sessionPath}!: ${JSON.stringify(sessionData, null, 2)}`
 							: message;
 						console.log(consoleMessage);
 					} else if (currentSession.type === 'map') {
 						for (const key of currentSession.keys) {
 							sessionData = currentSession.get(key).data;
+							const sessionDataSize = currentSession.get(key).size;
 							consoleMessage = sessionData.length > 0
-								? `Session ${sessionPath} with key ${key}!: ${
+								? `👉Session ${sessionPath} with key ${key} (${sessionDataSize} elements): ${
 									JSON.stringify(
 										sessionData,
 										null,
@@ -57,7 +58,7 @@ export function showAllSessions(bot: Bot, { command, access }: ShowSessionProps)
 					}
 
 					chatMessage = sessionData.length > 0
-						? `Session ${sessionPath} is ok, check in console!`
+						? `👉Session ${sessionPath} is ok, check in console!`
 						: message;
 				}
 

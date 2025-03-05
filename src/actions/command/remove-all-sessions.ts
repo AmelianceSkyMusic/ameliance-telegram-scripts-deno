@@ -22,7 +22,7 @@ export function removeAllSessions(bot: Bot, { command, access }: RemoveAllSessio
 			for (const session in ctxSession) {
 				ctxSession[session] = undefined;
 				const sessionPath = `ctx.session.${session}`;
-				const message = `Session ${sessionPath} was removed:\n${sessionPath} = ${
+				const message = `👉Session ${sessionPath} was removed:\n${sessionPath} = ${
 					ctxSession[session]
 				}`;
 

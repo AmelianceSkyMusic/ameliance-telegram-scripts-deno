@@ -29,16 +29,16 @@ export function resetSession<T>(bot: Bot, { command, access, session, resetData 
 				const sessionPath = `ctx.session.${session}`;
 				let message = 'Check console';
 				if (!(session in ctx.session)) {
-					message = `Session ${sessionPath} does not exist`;
+					message = `👉Session ${sessionPath} does not exist`;
 				} else {
 					const currentSession = ctx.session[session];
 					if (currentSession.type === 'list') {
 						currentSession.data = resetData;
-						message = `Session ${sessionPath} was reset: ${currentSession.data}`;
+						message = `👉Session ${sessionPath} was reset: ${currentSession.data}`;
 					} else if (currentSession.type === 'map') {
 						currentSession.get(chatId).data = resetData;
 						message =
-							`Session ${sessionPath} with key [${chatId}] was reset: ${currentSession.data}`;
+							`👉Session ${sessionPath} with key [${chatId}] was reset: ${currentSession.data}`;
 					}
 				}
 

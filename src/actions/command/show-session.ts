@@ -29,26 +29,26 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 				let consoleMessage: string | null = null;
 				let chatMessage = 'Check console';
 				if (!(session in ctx.session)) {
-					message = `Session ${sessionPath} does not exist`;
+					message = `👉Session ${sessionPath} does not exist`;
 				} else {
 					const currentSession = ctx.session[session];
 					console.log('ctx.session: ', ctx.session.exclusiveCommonHistory);
 					let sessionData = [];
 					if (currentSession.type === 'list' && currentSession.size === 0) {
-						message = `Session ${sessionPath} is empty array []`;
+						message = `👉Session ${sessionPath} is empty array []`;
 					} else if (currentSession.type === 'map' && currentSession.size === 0) {
-						message = `Session ${sessionPath} is empty object {}`;
+						message = `👉Session ${sessionPath} is empty object {}`;
 					} else if (currentSession.type === 'list') {
 						sessionData = currentSession.data;
 						consoleMessage = !consoleMessage && sessionData.length > 0
-							? `Session ${sessionPath}!: ${JSON.stringify(sessionData, null, 2)}`
+							? `👉Session ${sessionPath}!: ${JSON.stringify(sessionData, null, 2)}`
 							: message;
 						console.log(consoleMessage);
 					} else if (currentSession.type === 'map') {
 						if (currentSession.has(chatId)) {
 							sessionData = currentSession.get(chatId).data;
 							consoleMessage = sessionData.length > 0
-								? `Session ${sessionPath} with key ${chatId}!: ${
+								? `👉Session ${sessionPath} with key ${chatId}!: ${
 									JSON.stringify(
 										sessionData,
 										null,
@@ -58,12 +58,12 @@ export function showSession(bot: Bot, { command, access, session }: ShowSessionP
 								: message;
 							console.log(consoleMessage);
 						} else {
-							message = `Session ${sessionPath} is empty object {} with empty key [${chatId}]`;
+							message = `👉Session ${sessionPath} is empty object {} with empty key [${chatId}]`;
 						}
 					}
 
 					chatMessage = sessionData.length > 0
-						? `Session ${sessionPath} is ok, check in console!`
+						? `👉Session ${sessionPath} is ok, check in console!`
 						: message;
 				}
 
