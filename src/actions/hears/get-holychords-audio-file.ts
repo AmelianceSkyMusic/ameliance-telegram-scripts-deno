@@ -42,7 +42,7 @@ async function prepareLink(url: string) {
 }
 
 type GetHolychordsAudioFileProps = {
-	hear: RegExp | RegExp[];
+	hear?: RegExp | RegExp[];
 	access: HasAccess;
 };
 
