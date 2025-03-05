@@ -28,15 +28,20 @@ export async function runGemini(
 	if (session && currentSession.size === 0 && initPrompt) currentSession.add(initPrompt);
 
 	const prompt = promptCreator ? await promptCreator(ctx, message) : message;
-	if (!prompt) return console.error('[runGemini]: Empty prompt');
-
+	if (!prompt) {
+		return logUserInfo(ctx, { message: 'Empty prompt', shouldSendMessageInChat: false });
+	}
 	logUserInfo(ctx, { message: prompt, shouldSendMessageInChat: false });
 
 	const { answer: geminiAnswer, history } = await sendPromptGeminiWithHistory(
 		prompt,
 		currentSession.data,
 	);
-	console.log('[runGemini]: Gemini answer before prepare: ', geminiAnswer);
+	// console.log('[runGemini]: Gemini answer before prepare: ', geminiAnswer);
+	logUserInfo(ctx, {
+		message: `Gemini answer before prepare: ${geminiAnswer}`,
+		shouldSendMessageInChat: false,
+	});
 	//* Write history back to session
 	currentSession.data = history;
 	const preparedAnswer = prepareGeminiAnswerToTelegramHtml(geminiAnswer);
