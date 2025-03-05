@@ -11,12 +11,12 @@ const HOST = Deno.env.get('MONGODB_HOST');
 const NAME = Deno.env.get('MONGODB_NAME');
 const PARAMS = Deno.env.get('MONGODB_PARAMS');
 
-if (!DB) throw new Error('MONGODB: MONGODB is not set');
-if (!USER) throw new Error('MONGODB: MONGODB_USER is not set');
-if (!PASSWORD) throw new Error('MONGODB: MONGODB_PASSWORD is not set');
-if (!HOST) throw new Error('MONGODB: MONGODB_HOST is not set');
-if (!NAME) throw new Error('MONGODB: MONGODB_NAME is not set');
-if (!PARAMS) throw new Error('MONGODB: MONGODB_NAME is not set');
+if (!DB) console.error('MONGODB: MONGODB is not defined');
+if (!USER) console.error('MONGODB: MONGODB_USER is not defined');
+if (!PASSWORD) console.error('MONGODB: MONGODB_PASSWORD is not defined');
+if (!HOST) console.error('MONGODB: MONGODB_HOST is not defined');
+if (!NAME) console.error('MONGODB: MONGODB_NAME is not defined');
+if (!PARAMS) console.error('MONGODB: MONGODB_NAME is not defined');
 
 const DB_URL = `${DB}${USER}:${PASSWORD}@${HOST}/${NAME}${PARAMS}`;
 
