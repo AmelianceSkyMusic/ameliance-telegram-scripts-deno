@@ -10,7 +10,7 @@ type ResetProps = {
 	command?: string;
 	access: HasAccess;
 	session: string;
-	resetData: Content[] | null;
+	resetData: unknown | Content[] | null;
 };
 
 export function resetSession<
