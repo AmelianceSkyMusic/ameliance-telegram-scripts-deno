@@ -7,20 +7,20 @@ export function getUserInfo(ctx: Context) {
 	const context = ctx.msg;
 	return {
 		context,
-		userId: context.from?.id,
-		username: context.from?.username,
-		firstName: context.from?.first_name,
-		lastName: context.from?.last_name,
-		fullName: [context.from?.first_name, context.from?.last_name].join(' ').trim(),
-		message: context.text,
-		messageId: context.message_id,
-		chatType: context.chat.type,
-		date: context.date,
+		userId: String(context?.from?.id || ''),
+		username: context?.from?.username || '',
+		firstName: context?.from?.first_name || '',
+		lastName: context?.from?.last_name || '',
+		fullName: [context?.from?.first_name, context?.from?.last_name].join(' ').trim() || '',
+		message: context?.text,
+		messageId: context?.message_id,
+		chatType: context?.chat.type,
+		date: context?.date,
 		async getTextFromUrl() {
 			let textFromUrlInCurrentMessage = '';
 			const currentTextHTMLUrls = getLinksFromMessage(context);
 
-			if (currentTextHTMLUrls && currentTextHTMLUrls?.length > 0) {
+			if (currentTextHTMLUrls && currentTextHTMLUrls.length > 0) {
 				const url = currentTextHTMLUrls[0];
 				const dataFromHTML = await getHTMLData(ctx, url);
 				if (dataFromHTML) {

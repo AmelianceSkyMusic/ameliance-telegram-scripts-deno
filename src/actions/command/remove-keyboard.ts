@@ -1,15 +1,23 @@
+import { Content } from 'npm:@google/generative-ai';
 import { Bot, Context } from '../../../deps.deno.ts';
 import { handleAppError } from '../../handle-app-error.ts';
 import { HasAccess, hasAccess } from '../../has-access.ts';
 import { logUserInfo } from '../../log-user-info.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type RemoveKeyboardProps = {
 	command?: string;
 	access: HasAccess;
 };
 
-export function removeKeyboard(bot: Bot, { command, access }: RemoveKeyboardProps) {
-	bot.command(command || 'removekeyboard', async (ctx: Context) => {
+export function removeKeyboard<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(bot: B, { command, access }: RemoveKeyboardProps) {
+	bot.command(command || 'removekeyboard', async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {

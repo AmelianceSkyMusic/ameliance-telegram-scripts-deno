@@ -1,5 +1,5 @@
 import process from 'node:process';
-import { default as mongoose } from 'npm:mongoose@^8.8.3';
+import mongoose from 'npm:mongoose@8.12.1';
 import { CallbackError, Connection } from '../../deps.deno.ts';
 
 const DB = Deno.env.get('MONGODB');
@@ -44,19 +44,19 @@ export async function connectToDatabase() {
 
 		if (mongoose.connection.readyState) console.log('MONGODB: Connected to MongoDB');
 
-		connection.connection.on('error', (err: CallbackError) => {
+		cachedConnection.on('error', (err: CallbackError) => {
 			console.error('MONGODB: Error connecting to MongoDB:', err);
 		});
 
-		connection.connection.on('disconnected', () => {
+		cachedConnection.on('disconnected', () => {
 			console.log('MONGODB: MongoDB disconnected. Trying to reconnect...');
 		});
 
-		connection.connection.on('reconnected', () => {
+		cachedConnection.on('reconnected', () => {
 			console.log('MONGODB: MongoDB reconnected successfully');
 		});
 
-		return connection.connection;
+		return cachedConnection;
 	} catch (error) {
 		console.error('MONGODB: Error connecting to MongoDB:', error);
 		process.exit(1);

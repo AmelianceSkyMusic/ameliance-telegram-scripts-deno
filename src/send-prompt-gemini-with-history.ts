@@ -7,6 +7,8 @@ import {
 
 const GOOGLE_GEMINI_API = Deno.env.get('GOOGLE_GEMINI_API');
 
+if (!GOOGLE_GEMINI_API) throw new Error('GOOGLE_GEMINI_API is not set!');
+
 const genAI = new GoogleGenerativeAI(GOOGLE_GEMINI_API);
 
 // model: 'gemini-2.0-pro-exp-02-05',
@@ -24,7 +26,6 @@ const generationConfig = {
 
 export async function sendPromptGeminiWithHistory(prompt: string, history: Content[] = []) {
 	const tempHistory = [...history];
-	if (!GOOGLE_GEMINI_API) throw new Error('GOOGLE_GEMINI_API is missing!');
 
 	const chatSession = model.startChat({
 		generationConfig,

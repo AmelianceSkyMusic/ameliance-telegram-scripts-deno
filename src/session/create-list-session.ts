@@ -1,16 +1,16 @@
 export type ListSessionData<T> = {
 	readonly type: 'list';
-	readonly data: T[];
+	data: T[];
 };
 
-type CreateListSessionReturn<T> = ListSessionData<T> & {
+export type ListSession<T> = ListSessionData<T> & {
 	add(item: T): void;
 	clear(): void;
 	reset(): void;
 	size: number;
 };
 
-export function createListSession<T>(initialData: T[] = []): CreateListSessionReturn<T> {
+export function createListSession<T>(initialData: T[] = []): ListSession<T> {
 	//* Private data in closure
 	const _data = [...initialData];
 	const _type = 'list';

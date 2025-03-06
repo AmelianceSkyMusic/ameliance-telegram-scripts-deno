@@ -9,6 +9,8 @@ import { logUserInfo } from '../../log-user-info.ts';
 import { replyHTML } from '../../reply-html.ts';
 import { runGemini } from '../../run-gemini.ts';
 import { checkIsTrigger } from '../../check-is-trigger.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type MessageProps = {
 	access: HasAccess;
@@ -24,8 +26,13 @@ type MessageProps = {
 	};
 };
 
-export function message(
-	bot: Bot,
+export function message<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(
+	bot: B,
 	{
 		access,
 		session,
@@ -36,13 +43,13 @@ export function message(
 		shouldRemoveTrigger,
 	}: MessageProps,
 ) {
-	bot.on('message', async (ctx: Context) => {
+	bot.on('message', async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, { message: 'on message', accessMessage: hasAccessToRunCommand });
 			if (!hasAccessToRunCommand) return;
 
-			let message = ctx.msg.text;
+			let message = ctx?.msg?.text || '';
 
 			//* Check if the message starts with a trigger and replace original message
 			const isTrigger = trigger ? checkIsTrigger(trigger, message, shouldRemoveTrigger) : null;
@@ -70,7 +77,7 @@ export function message(
 
 				if (!preparedAnswer) return;
 
-				const messageId = ctx.msg.message_id;
+				const messageId = ctx?.msg?.message_id;
 				if (isBotChat) {
 					await ctx.reply(preparedAnswer, {
 						parse_mode: 'HTML',

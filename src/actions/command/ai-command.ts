@@ -1,3 +1,4 @@
+import { Content } from 'npm:@google/generative-ai';
 import { Bot, Context } from '../../../deps.deno.ts';
 import { autoRemovableMessage } from '../../auto-removable-message.ts';
 import { handleAppError } from '../../handle-app-error.ts';
@@ -8,6 +9,8 @@ import { removeMessageById } from '../../remove-message-by-id.ts';
 import { replyHTML } from '../../reply-html.ts';
 import { sendMessageHTML } from '../../send-message-html.ts';
 import { sendPromptGemini } from '../../send-prompt-gemini.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type AiCommandProps = {
 	access: HasAccess;
@@ -19,8 +22,13 @@ type AiCommandProps = {
 	replayNotification?: string;
 };
 
-export function aiCommand(
-	bot: Bot,
+export function aiCommand<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(
+	bot: B,
 	{
 		access,
 		command,
@@ -31,7 +39,7 @@ export function aiCommand(
 		replayNotification = `Команда /${command} працює тільки як відповідь на повідомлення!`,
 	}: AiCommandProps,
 ) {
-	bot.command(command, async (ctx: Context) => {
+	bot.command(command, async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {
@@ -40,11 +48,11 @@ export function aiCommand(
 			});
 			if (!hasAccessToRunCommand) return;
 
-			const messageThreadId = ctx.msg.message_thread_id;
-			const messageId = ctx.msg.message_id;
-			if (clearCommandInChat) await removeMessageById({ ctx, messageId, ms: 0 });
+			const messageThreadId = ctx?.msg?.message_thread_id;
+			const messageId = ctx?.msg?.message_id;
+			if (clearCommandInChat && messageId) await removeMessageById({ ctx, messageId, ms: 0 });
 
-			const replyToMessage = ctx.msg.reply_to_message;
+			const replyToMessage = ctx.msg?.reply_to_message;
 
 			if (isReply && !replyToMessage) {
 				await autoRemovableMessage({

@@ -9,9 +9,10 @@ export async function handleAppError(
 	ctx: Context,
 	error: unknown,
 	status?: number,
-): Promise<ReturnErrorHandler> {
-	if (!APP_NAME) return console.log('APP_NAME is not set');
-	if (!LOG_CHAT_ID) return console.log('LOG_CHAT_ID is not set');
+): Promise<ReturnErrorHandler | undefined> {
+	if (!APP_NAME) console.log('APP_NAME is not set');
+	if (!LOG_CHAT_ID) console.log('LOG_CHAT_ID is not set');
+	if (!APP_NAME || !LOG_CHAT_ID) return;
 
 	const returnedError = errorHandler({
 		error,

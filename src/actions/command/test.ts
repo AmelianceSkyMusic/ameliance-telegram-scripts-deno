@@ -1,7 +1,10 @@
+import { Content } from 'npm:@google/generative-ai';
 import { Bot, Context } from '../../../deps.deno.ts';
 import { handleAppError } from '../../handle-app-error.ts';
 import { HasAccess, hasAccess } from '../../has-access.ts';
 import { logUserInfo } from '../../log-user-info.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type TestProps = {
 	command?: string;
@@ -9,8 +12,13 @@ type TestProps = {
 	message?: string;
 };
 
-export function test(bot: Bot, { command, access, message = 'test' }: TestProps) {
-	bot.command(command || 'test', async (ctx: Context) => {
+export function test<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(bot: B, { command, access, message = 'test' }: TestProps) {
+	bot.command(command || 'test', async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {

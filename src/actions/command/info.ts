@@ -5,14 +5,22 @@ import { logUserInfo } from '../../log-user-info.ts';
 import { removeMessageById } from '../../remove-message-by-id.ts';
 import { getCurrentMessageUserInfo } from '../../get-current-message-user-info.ts';
 import { HasAccess } from '../../has-access.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { Content } from 'npm:@google/generative-ai';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type InfoProps = {
 	command?: string;
 	access: HasAccess;
 };
 
-export function info(bot: Bot, { command, access }: InfoProps) {
-	bot.command(command || 'info', async (ctx: Context) => {
+export function info<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(bot: B, { command, access }: InfoProps) {
+	bot.command(command || 'info', async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {
@@ -21,8 +29,8 @@ export function info(bot: Bot, { command, access }: InfoProps) {
 			});
 			if (!hasAccessToRunCommand) return;
 
-			const messageId = ctx.msg.message_id;
-			await removeMessageById({ ctx, messageId });
+			const messageId = ctx?.msg?.message_id;
+			if (messageId) await removeMessageById({ ctx, messageId });
 
 			const userInfo = getCurrentMessageUserInfo(ctx);
 			const currentChat = String(ctx.message?.chat.id);

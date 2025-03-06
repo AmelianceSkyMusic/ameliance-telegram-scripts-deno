@@ -1,9 +1,9 @@
 export type MapSessionData<T> = {
 	readonly type: 'map';
-	readonly data: Record<string, T[]>;
+	data: Record<string, T[]>;
 };
 
-type CreateMapSessionReturn<T> = MapSessionData<T> & {
+export type MapSession<T> = MapSessionData<T> & {
 	clear(): void;
 	reset(): void;
 	has(key: string): boolean;
@@ -23,7 +23,7 @@ type CreateMapSessionReturn<T> = MapSessionData<T> & {
 export function createMapSession<T>(
 	initialKeyData: T[] = [],
 	initialData: Record<string, T[]> = {},
-): CreateMapSessionReturn<T> {
+): MapSession<T> {
 	const _data: Record<string, T[]> = { ...initialData };
 	const _type = 'map';
 

@@ -1,7 +1,10 @@
+import { Content } from 'npm:@google/generative-ai';
 import { Bot, Context } from '../../../deps.deno.ts';
 import { handleAppError } from '../../handle-app-error.ts';
 import { HasAccess, hasAccess } from '../../has-access.ts';
 import { logUserInfo } from '../../log-user-info.ts';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
 type ShowSessionsProps = {
 	command?: string;
@@ -9,8 +12,13 @@ type ShowSessionsProps = {
 	sessions: string[];
 };
 
-export function showSessions(bot: Bot, { command, access, sessions }: ShowSessionsProps) {
-	bot.command(command || `showsessions`, async (ctx: Context) => {
+export function showSessions<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(bot: B, { command, access, sessions }: ShowSessionsProps) {
+	bot.command(command || `showsessions`, async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {
@@ -44,7 +52,7 @@ export function showSessions(bot: Bot, { command, access, sessions }: ShowSessio
 							console.log(consoleMessage);
 						} else if (currentSession.type === 'map') {
 							for (const key of currentSession.keys) {
-								sessionData = currentSession.get(key).data;
+								sessionData = currentSession.get(key)?.data || [];
 								consoleMessage = sessionData.length > 0
 									? `👉Session ${sessionPath} with key ${key}!: ${
 										JSON.stringify(

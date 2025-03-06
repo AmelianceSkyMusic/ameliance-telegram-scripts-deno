@@ -1,27 +1,35 @@
+import { Content } from 'npm:@google/generative-ai';
 import { Bot, Context } from '../../../deps.deno.ts';
 import { handleAppError } from '../../handle-app-error.ts';
 import { HasAccess, hasAccess } from '../../has-access.ts';
 import { logUserInfo } from '../../log-user-info.ts';
-import { prepareGeminiAnswerToTelegramHtml } from '../../prepare-gemini-answer-to-telegram-html.ts';
 import { replyHTML } from '../../reply-html.ts';
 import { runGemini } from '../../run-gemini.ts';
-import { sendPromptGeminiWithHistory } from '../../send-prompt-gemini-with-history.ts';
-import { Content } from 'npm:@google/generative-ai';
+import { ListSession } from '../../session/create-list-session.ts';
+import { MapSession } from '../../session/create-map-session.ts';
 
-type AiHearsProps = {
+type AiHearsProps<C> = {
 	access: HasAccess;
 	hear: RegExp | RegExp[];
-	promptCreator?: (ctx: Context, message: string) => string | undefined | null;
+	promptCreator?: (
+		ctx: C,
+		message: string,
+	) => Promise<string | undefined | null> | string | undefined | null;
 	initPrompt?: Content;
 	session: string | null;
 	shouldReply?: boolean;
 };
 
-export function aiHears(
-	bot: Bot,
-	{ access, hear, promptCreator, initPrompt, session, shouldReply = true }: AiHearsProps,
+export function aiHears<
+	B extends Bot<C>,
+	C extends Context & {
+		session: Record<string, ListSession<Content> | MapSession<Content>>;
+	},
+>(
+	bot: B,
+	{ access, hear, promptCreator, initPrompt, session, shouldReply = true }: AiHearsProps<C>,
 ) {
-	bot.hears(hear, async (ctx: Context) => {
+	bot.hears(hear, async (ctx: C) => {
 		try {
 			const hasAccessToRunCommand = hasAccess({ ctx, ...access });
 			logUserInfo(ctx, {
@@ -30,8 +38,8 @@ export function aiHears(
 			});
 			if (!hasAccessToRunCommand) return;
 
-			const messageId = ctx.msg.message_id;
-			const messageText = ctx.msg.text || ctx.msg.caption;
+			const messageId = ctx?.msg?.message_id;
+			const messageText = ctx?.msg?.text || ctx?.msg?.caption;
 			if (!messageText) return;
 
 			const preparedAnswer = await runGemini(ctx, {
@@ -53,29 +61,3 @@ export function aiHears(
 		}
 	});
 }
-
-// //* Define session if exists or set temp empty array
-// let currentSession = session ? ctx.session[session] : [];
-
-// //* If session is map, get session data by chatId
-// if (currentSession.type === 'map') {
-// 	const chatId = ctx.chat.id;
-// 	currentSession = currentSession.get(chatId);
-// }
-
-// //* If session is empty, set initPrompt
-// if (session && currentSession.size === 0 && initPrompt) currentSession.add(initPrompt);
-
-// const messageId = ctx.msg.message_id;
-// const messageText = ctx.msg.text || ctx.msg.caption;
-// if (!messageText) return;
-
-// const prompt = promptCreator(ctx, messageText);
-// if (!prompt) return console.log('empty prompt');
-// const { answer: geminiAnswer, history } = await sendPromptGeminiWithHistory(
-// 	prompt,
-// 	currentSession.data,
-// );
-// //* Write history back to session
-// currentSession.data = history;
-// const preparedAnswer = prepareGeminiAnswerToTelegramHtml(geminiAnswer);
