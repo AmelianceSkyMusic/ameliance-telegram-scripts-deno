@@ -35,7 +35,7 @@ export async function runGemini<
 		}
 
 		//* If session is empty, set initPrompt
-		if (sessionData && currentSession.size === 0 && initPrompt) sessionData.add(initPrompt);
+		if (sessionData && sessionData.size === 0 && initPrompt) sessionData.add(initPrompt);
 	}
 
 	const prompt = promptCreator ? await promptCreator(ctx, message) : message;
