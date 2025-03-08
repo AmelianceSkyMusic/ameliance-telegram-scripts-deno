@@ -18,7 +18,7 @@ export function getUserReplyToInfo(ctx: Context) {
 		username: context.from?.is_bot ? 'bot' : context.from?.username || '',
 		fullName: [context.from?.first_name, context.from?.last_name].join(' ').trim() || '',
 		userId: String(context.from?.id || ''),
-		message: context.text,
+		message: context.text || context.caption || '',
 		messageId: context.message_id,
 		chatType: context.chat.type,
 		date: context.date,

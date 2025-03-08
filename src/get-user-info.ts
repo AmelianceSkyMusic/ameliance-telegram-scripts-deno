@@ -12,7 +12,7 @@ export function getUserInfo(ctx: Context) {
 		firstName: context?.from?.first_name || '',
 		lastName: context?.from?.last_name || '',
 		fullName: [context?.from?.first_name, context?.from?.last_name].join(' ').trim() || '',
-		message: context?.text,
+		message: context?.text || context?.caption || '',
 		messageId: context?.message_id,
 		chatType: context?.chat.type,
 		date: context?.date,
