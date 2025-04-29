@@ -16,13 +16,13 @@ export function prepareGeminiAnswerToTelegramHtml(message: string) {
 			})
 			//* Bold text
 			.replace(/\*\*(.*?)\*\*/g, (_, boldText) => `<b>${boldText}</b>`)
+			//* Lists
+			.replace(/^\* (.+)$/gm, (_, listItem) => `• ${listItem.trim()}`)
 			//* Italic text
 			.replace(
 				/(^|[^*])\*(.*?)\*(?!\*)/g,
 				(_, prefix, italicText) => `${prefix}<i>${italicText}</i>`,
 			)
-			//* Lists
-			.replace(/^\* (.+)$/gm, (_, listItem) => `• ${listItem.trim()}`)
 			//* Code blocks
 			.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, language, code) => {
 				const langAttr = language ? ` language="${language}"` : '';
