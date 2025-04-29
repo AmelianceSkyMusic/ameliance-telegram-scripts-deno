@@ -13,6 +13,7 @@ export type MapSession<T> = MapSessionData<T> & {
 		| {
 			data: T[];
 			add(item: T): void;
+			shift(): T | undefined;
 			clear(): void;
 			reset(): void;
 			size: number;
@@ -61,6 +62,9 @@ export function createMapSession<T>(
 				},
 				add(item: T) {
 					_data[key].push(item);
+				},
+				shift() {
+					return _data[key].shift();
 				},
 				clear() {
 					_data[key] = [];
