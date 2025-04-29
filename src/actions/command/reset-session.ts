@@ -37,7 +37,7 @@ export function resetSession<
 			} else {
 				const currentSession = ctx.session[session];
 				if (currentSession.type === 'list') {
-					currentSession.data = resetData as Content[];
+					currentSession.data = [resetData as Content].filter(Boolean);
 					message = `👉Session ${sessionPath} was reset: ${currentSession.data}`;
 				} else if (currentSession.type === 'map' && chatId) {
 					const sessionData = currentSession.get(chatId);
