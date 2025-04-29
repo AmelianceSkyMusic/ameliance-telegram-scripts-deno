@@ -5,6 +5,7 @@ export type ListSessionData<T> = {
 
 export type ListSession<T> = ListSessionData<T> & {
 	add(item: T): void;
+	shift(): T | undefined;
 	clear(): void;
 	reset(): void;
 	size: number;
@@ -27,6 +28,9 @@ export function createListSession<T>(initialData: T[] = []): ListSession<T> {
 		},
 		add(item: T) {
 			_data.push(item);
+		},
+		shift() {
+			return _data.shift();
 		},
 		clear() {
 			_data.length = 0;
