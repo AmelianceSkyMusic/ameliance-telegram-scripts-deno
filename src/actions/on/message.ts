@@ -33,7 +33,7 @@ type OnMessagePromise = (
 type MessageProps = {
 	access: HasAccess;
 	session: string | null;
-	initPrompt: Content;
+	initPrompt?: Content;
 	promptCreator?: (ctx: ContextWithSession, message: string) => Promise<string | undefined | null>;
 	trigger?: RegExp | RegExp[] | string | string[];
 	shouldRemoveTrigger?: boolean;
