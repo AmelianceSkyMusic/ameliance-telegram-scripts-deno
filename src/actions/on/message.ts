@@ -12,11 +12,29 @@ import { checkIsTrigger } from '../../check-is-trigger.ts';
 import { ListSession } from '../../session/create-list-session.ts';
 import { MapSession } from '../../session/create-map-session.ts';
 
+type ContextWithSession = Context & {
+	session: Record<string, ListSession<Content> | MapSession<Content>>;
+};
+
+type OnMessage = (
+	ctx: Context & {
+		session: Record<string, ListSession<Content | unknown> | MapSession<Content | unknown>>;
+	},
+	message: string,
+) => void;
+
+type OnMessagePromise = (
+	ctx: Context & {
+		session: Record<string, ListSession<Content | unknown> | MapSession<Content | unknown>>;
+	},
+	message: string,
+) => Promise<void>;
+
 type MessageProps = {
 	access: HasAccess;
 	session: string | null;
-	initPrompt: Content;
-	promptCreator?: (ctx: Context, message: string) => Promise<string | undefined | null>;
+	initPrompt?: Content;
+	promptCreator?: (ctx: ContextWithSession, message: string) => Promise<string | undefined | null>;
 	trigger?: RegExp | RegExp[] | string | string[];
 	shouldRemoveTrigger?: boolean;
 	randomRun?: {
@@ -24,14 +42,10 @@ type MessageProps = {
 		max: number;
 		match: number;
 	};
+	onMessage?: OnMessage | OnMessagePromise | (OnMessage | OnMessagePromise)[];
 };
 
-export function message<
-	B extends Bot<C>,
-	C extends Context & {
-		session: Record<string, ListSession<Content> | MapSession<Content>>;
-	},
->(
+export function message<B extends Bot<C>, C extends ContextWithSession>(
 	bot: B,
 	{
 		access,
@@ -41,6 +55,7 @@ export function message<
 		randomRun,
 		trigger,
 		shouldRemoveTrigger,
+		onMessage,
 	}: MessageProps,
 ) {
 	bot.on('message', async (ctx: C) => {
@@ -49,7 +64,17 @@ export function message<
 			logUserInfo(ctx, { message: 'on message', accessMessage: hasAccessToRunCommand });
 			if (!hasAccessToRunCommand) return;
 
-			let message = ctx?.msg?.text || '';
+			let message = ctx?.msg?.text || ctx?.msg?.caption || '';
+
+			if (onMessage) {
+				if (Array.isArray(onMessage)) {
+					for (const callback of onMessage) {
+						await callback(ctx, message);
+					}
+				} else {
+					await onMessage(ctx, message);
+				}
+			}
 
 			//* Check if the message starts with a trigger and replace original message
 			const isTrigger = trigger ? checkIsTrigger(trigger, message, shouldRemoveTrigger) : null;
