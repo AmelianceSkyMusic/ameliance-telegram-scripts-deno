@@ -3,7 +3,12 @@ import { handleAppError } from './handle-app-error.ts';
 
 export async function getHTMLData(ctx: Context, url: string) {
 	try {
-		const data = await fetch(url);
+		const data = await fetch(url, {
+			headers: {
+				'User-Agent':
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+			},
+		});
 		if (!data.ok) {
 			await handleAppError(ctx, `Error fetching data: ${data.status} ${data.statusText}`);
 			return null;
