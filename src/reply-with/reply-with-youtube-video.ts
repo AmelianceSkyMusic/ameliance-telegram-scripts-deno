@@ -8,16 +8,47 @@ export async function replyWithYoutubeVideo(ctx: Context, url: string) {
 	const resp = await api.ytApi.getVideoByUrl(videoID);
 	if (resp.ok) {
 		const targetUrl = resp.data.formats[0].url;
-		const thumbnail = resp.data.thumbnail[0];
+		const thumbnails = resp.data.thumbnail;
 		const title = resp.data.title;
 		const channelTitle = resp.data.channelTitle;
+		const videoWidth = resp.data.formats[0].width;
+		const videoHeight = resp.data.formats[0].height;
 
 		try {
-			await ctx.replyWithVideo(new InputFile(new URL(targetUrl)), {
-				caption: `${channelTitle} - ${title}`,
-				thumbnail: new InputFile(new URL(thumbnail.url)), //TODO: doesn't work
-				width: thumbnail.width,
-				height: thumbnail.height,
+			const caption = `${channelTitle} - ${title}`;
+
+			const safeFileName = caption
+				.replaceAll(/[\\/:*?"<>|\n\r\t]/g, ' ')
+				.replaceAll(/\s+/g, ' ')
+				.trim()
+				.slice(0, 120);
+
+			const res = await fetch(targetUrl);
+			const buf = new Uint8Array(await res.arrayBuffer());
+
+			let thumbFile: InputFile | undefined;
+			try {
+				const smallestThumb = thumbnails?.length
+					? thumbnails.toSorted((a, b) => a.width * a.height - b.width * b.height)[0]
+					: undefined;
+
+				if (smallestThumb?.url) {
+					const thumbRes = await fetch(smallestThumb.url);
+					const thumbBuf = new Uint8Array(await thumbRes.arrayBuffer());
+					const maxThumbSizeBytes = 200 * 1024;
+					thumbFile = thumbBuf.byteLength && thumbBuf.byteLength <= maxThumbSizeBytes
+						? new InputFile(thumbBuf, 'thumb.jpg')
+						: undefined;
+				}
+			} catch {
+				thumbFile = undefined;
+			}
+
+			await ctx.replyWithVideo(new InputFile(buf, `${safeFileName || 'video'}.mp4`), {
+				caption,
+				...(thumbFile ? { thumbnail: thumbFile } : {}),
+				width: videoWidth,
+				height: videoHeight,
 			});
 		} catch (error) {
 			handleAppError(ctx, error);
