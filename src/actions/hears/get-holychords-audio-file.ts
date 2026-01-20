@@ -96,8 +96,7 @@ export function getHolychordsAudioFile<
 
 				if (audioFileMatch) {
 					matchDownloadUrl = audioFileMatch[1];
-				} else {
-					matchDownloadUrl = null;
+					break;
 				}
 			}
 
